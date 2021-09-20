@@ -8,4 +8,5 @@ data class Expense(
     val amount: Double,
     val createdAt: Date?,
     val categoryId: Long,
+    val paymentTypeId: Long,
 )

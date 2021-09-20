@@ -23,4 +23,6 @@ data class ExpenseDto(
     val createdAt: Calendar?,
     @ColumnInfo(name = "expense_category_id")
     val categoryId: Long,
+    @ColumnInfo(name = "expense_payment_type_id")
+    val paymentTypeId: Long,
 )

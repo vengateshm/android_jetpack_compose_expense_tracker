@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">ExpenseTracker</string>
+    <string name="app_name">Expense Tracker</string>
+    <string name="expenses_label">Expenses</string>
+    <string name="more">More</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="expenses_add_label">Add Expense</string>
+    <string name="description_label">Description</string>
+    <string name="amount_label">Amount</string>
+    <string name="add">Add</string>
+    <string name="err_please_select_category">Please select category</string>
+    <string name="err_please_select_payment_type">Please select payment type</string>
+    <string name="err_please_select_date">Please select date</string>
+    <string name="err_please_enter_description">Please enter description</string>
+    <string name="err_please_enter_amount">Please enter valid amount</string>
+    <string name="err_amount_should_not_be_zero">Please enter non zero amount</string>
 </resources>
