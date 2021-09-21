@@ -13,3 +13,10 @@ sealed class Screen(val route: String, @StringRes val labelResourceId: Int, val 
     object ExpenseAdd : Screen("expense_add", R.string.expenses_add_label, Icons.Rounded.Add)
     object More : Screen("more", R.string.more, Icons.Rounded.MoreHoriz)
 }
+
+fun String.toToolbarLabelResId() = when {
+    this == Screen.ExpenseList.route -> Screen.ExpenseList.labelResourceId
+    this == Screen.More.route -> Screen.More.labelResourceId
+    this == Screen.ExpenseAdd.route -> Screen.ExpenseAdd.labelResourceId
+    else -> R.string.app_name
+}
