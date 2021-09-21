@@ -38,4 +38,8 @@ class ExpenseRepositoryImpl @Inject constructor(
     override suspend fun getAllPaymentType(): List<PaymentTypeDto> {
         return paymentTypeDao.getAllPaymentTypes()
     }
+
+    override suspend fun addExpenseCategory(expenseCategoryDto: ExpenseCategoryDto) {
+        expenseCategoryDao.addExpenseCategory(expenseCategoryDto)
+    }
 }

@@ -12,4 +12,5 @@ interface ExpenseRepository {
     fun getAllExpenses(): Flow<List<ExpenseWithCategoryDto>>
     suspend fun getAllCategories(): List<ExpenseCategoryDto>
     suspend fun getAllPaymentType(): List<PaymentTypeDto>
+    suspend fun addExpenseCategory(expenseCategoryDto: ExpenseCategoryDto)
 }

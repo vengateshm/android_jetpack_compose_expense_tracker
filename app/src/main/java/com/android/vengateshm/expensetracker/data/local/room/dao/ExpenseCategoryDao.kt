@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.android.vengateshm.expensetracker.data.local.room.dto.ExpenseCategoryDto
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseCategoryDao {
@@ -13,4 +12,7 @@ interface ExpenseCategoryDao {
 
     @Query("SELECT * FROM expense_category")
     fun getAllCategories(): List<ExpenseCategoryDto>
+
+    @Insert
+    fun addExpenseCategory(expenseCategoryDto: ExpenseCategoryDto)
 }
