@@ -10,6 +10,7 @@ import com.android.vengateshm.expensetracker.R
 
 sealed class Screen(val route: String, @StringRes val labelResourceId: Int, val icon: ImageVector) {
     object ExpenseList : Screen("expense_list", R.string.expenses_label, Icons.Rounded.List)
+    object ExpenseDetail : Screen("expense_detail", R.string.expenses_label, Icons.Rounded.List)
     object ExpenseAdd : Screen("expense_add", R.string.expenses_add_label, Icons.Rounded.Add)
     object More : Screen("more", R.string.more, Icons.Rounded.MoreHoriz)
 }

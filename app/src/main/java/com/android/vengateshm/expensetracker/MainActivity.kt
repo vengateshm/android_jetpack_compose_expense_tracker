@@ -16,18 +16,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import com.android.vengateshm.expensetracker.presentation.Screen
 import com.android.vengateshm.expensetracker.presentation.expenseAdd.ExpenseAddScreen
+import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetail
 import com.android.vengateshm.expensetracker.presentation.expenseList.ExpenseListScreen
 import com.android.vengateshm.expensetracker.presentation.more.MoreScreen
 import com.android.vengateshm.expensetracker.presentation.toToolbarLabelResId
 import com.android.vengateshm.expensetracker.ui.theme.ExpenseTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 val bottomMenuList = listOf(
     Screen.ExpenseList,
@@ -50,6 +51,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalSerializationApi
 @Composable
 fun MainScreen(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -115,22 +117,33 @@ fun MainScreen(navController: NavHostController) {
             startDestination = Screen.ExpenseList.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(Screen.ExpenseList.route) {
+            composable(route = Screen.ExpenseList.route) {
                 ExpenseListScreen(navController = navController)
             }
-            composable(Screen.More.route) {
-                MoreScreen(navController = navController)
-            }
-            composable(Screen.ExpenseAdd.route) {
-                ExpenseAddScreen(navController = navController,
-                onShowSnackBar = {
-                    coroutineScope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = context.getString(it),
-                            duration = SnackbarDuration.Short
+            dialog(
+                route = Screen.ExpenseDetail.route + "/{expenseWithCategory}",
+            ) {
+                it.arguments?.getString("expenseWithCategory")
+                    ?.also { jsonStr ->
+                        ExpenseDetail(
+                            navController = navController,
+                            expenseWithCategory = Json.decodeFromString(jsonStr)
                         )
                     }
-                })
+            }
+            composable(route = Screen.ExpenseAdd.route) {
+                ExpenseAddScreen(navController = navController,
+                    onShowSnackBar = {
+                        coroutineScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                message = context.getString(it),
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    })
+            }
+            composable(route = Screen.More.route) {
+                MoreScreen(navController = navController)
             }
         }
     }

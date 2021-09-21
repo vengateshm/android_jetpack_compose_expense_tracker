@@ -30,9 +30,9 @@ fun ExpenseAddScreen(
     var selectedPaymentTypeName by remember { mutableStateOf("Select Payment Type") }
     var selectedDate by remember { mutableStateOf("Select Date") }
 
-    var selectedCategory: ExpenseCategory? = null
-    var selectedPaymentType: PaymentType? = null
-    var selectedExpenseDate: Calendar? = null
+    var selectedCategory by remember { mutableStateOf<ExpenseCategory?>(null) }
+    var selectedPaymentType by remember { mutableStateOf<PaymentType?>(null) }
+    var selectedExpenseDate by remember { mutableStateOf<Calendar?>(null) }
 
     ExpenseAdd(
         categoryList = state.expenseAddData.categoryList,

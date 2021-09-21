@@ -20,7 +20,11 @@ import androidx.navigation.NavController
 import com.android.vengateshm.expensetracker.R
 import com.android.vengateshm.expensetracker.presentation.Screen
 import com.android.vengateshm.expensetracker.presentation.expenseList.components.ExpenseListItem
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
+@ExperimentalSerializationApi
 @Composable
 fun ExpenseListScreen(
     navController: NavController,
@@ -34,21 +38,32 @@ fun ExpenseListScreen(
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             state.error.isNotBlank() -> {
-                Text(text = state.error,
+                Text(
+                    text = state.error,
                     color = MaterialTheme.colors.error,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp)
-                        .align(Alignment.Center))
+                        .align(Alignment.Center)
+                )
             }
             else -> {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(state.expenseList) { expenseListItem ->
                         ExpenseListItem(expenseWithCategory = expenseListItem,
-                        onDeleteClicked = {
-                            viewModel.deleteExpense(it)
-                        })
+                            onDeleteClicked = {
+                                viewModel.deleteExpense(it)
+                            },
+                            onItemClicked = {
+                                navController.navigate(
+                                    Screen.ExpenseDetail.route + "/${
+                                        Json.encodeToString(
+                                            expenseListItem
+                                        )
+                                    }"
+                                )
+                            })
                         Divider()
                     }
                 }

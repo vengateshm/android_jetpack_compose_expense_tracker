@@ -40,6 +40,7 @@ fun MoreScreen(
             },
             onAddCategory = {
                 viewModel.addExpenseCategory(it)
+                navController.popBackStack()
             }
         )
     }

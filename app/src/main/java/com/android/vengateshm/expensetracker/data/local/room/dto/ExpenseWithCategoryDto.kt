@@ -27,7 +27,6 @@ fun ExpenseWithCategoryDto.toExpenseWithCategory() = ExpenseWithCategory(
     expenseId = this.expenseId,
     description = this.description,
     amount = this.amount,
-    createdAt = this.createdAt,
     categoryId = this.categoryId,
     categoryName = this.categoryName,
     paymentTypeId = this.paymentTypeId,
