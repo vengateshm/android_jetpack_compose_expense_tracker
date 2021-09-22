@@ -17,6 +17,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import androidx.navigation.navDeepLink
+import com.android.vengateshm.expensetracker.common.DEEPLINK_BASE_URI
+import com.android.vengateshm.expensetracker.common.DEEPLINK_SUFFIX_EXPENSE_ADD
+import com.android.vengateshm.expensetracker.common.DEEPLINK_SUFFIX_EXPENSE_LIST
+import com.android.vengateshm.expensetracker.common.DEEPLINK_SUFFIX_MORE
 import com.android.vengateshm.expensetracker.presentation.Screen
 import com.android.vengateshm.expensetracker.presentation.expenseAdd.ExpenseAddScreen
 import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetail
@@ -117,7 +122,11 @@ fun MainScreen(navController: NavHostController) {
             startDestination = Screen.ExpenseList.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(route = Screen.ExpenseList.route) {
+            composable(route = Screen.ExpenseList.route,
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "$DEEPLINK_BASE_URI/$DEEPLINK_SUFFIX_EXPENSE_LIST"
+                })
+            ) {
                 ExpenseListScreen(navController = navController)
             }
             dialog(
@@ -131,7 +140,11 @@ fun MainScreen(navController: NavHostController) {
                         )
                     }
             }
-            composable(route = Screen.ExpenseAdd.route) {
+            composable(route = Screen.ExpenseAdd.route,
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "$DEEPLINK_BASE_URI/$DEEPLINK_SUFFIX_EXPENSE_ADD"
+                })
+            ) {
                 ExpenseAddScreen(navController = navController,
                     onShowSnackBar = {
                         coroutineScope.launch {
@@ -142,7 +155,11 @@ fun MainScreen(navController: NavHostController) {
                         }
                     })
             }
-            composable(route = Screen.More.route) {
+            composable(route = Screen.More.route,
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "$DEEPLINK_BASE_URI/$DEEPLINK_SUFFIX_MORE"
+                })
+            ) {
                 MoreScreen(navController = navController)
             }
         }

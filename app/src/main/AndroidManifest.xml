@@ -20,7 +20,37 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="www.expensetracker.com"/>
+            </intent-filter>
         </activity>
     </application>
 
+    <!--Deep link-->
+    <!--<activity
+        android:name="com.example.android.GizmosActivity"
+        android:label="@string/title_gizmos" >
+        <intent-filter android:label="@string/filter_view_http_gizmos">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            &lt;!&ndash; Accepts URIs that begin with "http://www.example.com/gizmos” &ndash;&gt;
+            <data android:scheme="http"
+                android:host="www.example.com"
+                android:pathPrefix="/gizmos" />
+            &lt;!&ndash; note that the leading "/" is required for pathPrefix&ndash;&gt;
+        </intent-filter>
+        <intent-filter android:label="@string/filter_view_example_gizmos">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            &lt;!&ndash; Accepts URIs that begin with "example://gizmos” &ndash;&gt;
+            <data android:scheme="example"
+                android:host="gizmos" />
+        </intent-filter>
+    </activity>-->
 </manifest>
