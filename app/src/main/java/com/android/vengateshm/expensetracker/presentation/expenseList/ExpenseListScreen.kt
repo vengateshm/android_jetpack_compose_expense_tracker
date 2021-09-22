@@ -3,15 +3,13 @@ package com.android.vengateshm.expensetracker.presentation.expenseList
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +27,7 @@ import com.android.vengateshm.expensetracker.presentation.Screen
 import com.android.vengateshm.expensetracker.presentation.expenseList.components.Chip
 import com.android.vengateshm.expensetracker.presentation.expenseList.components.ExpenseListItem
 import com.android.vengateshm.expensetracker.ui.theme.Purple200
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -43,8 +42,10 @@ fun ExpenseListScreen(
     val state = viewModel.expenseListState.value
     val sortMode = viewModel.sortMode.value
     val categoryList = viewModel.categoryList.value
-    val categoryFilterHorizontalScrollState = rememberScrollState()
+    val categoryLazyRowState = rememberLazyListState()
     val clickedCategory = viewModel.clickedExpenseCategory.value
+    val clickedCategoryIndex = viewModel.clickedExpenseCategoryIndex.value
+    val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
         when {
@@ -89,20 +90,26 @@ fun ExpenseListScreen(
                     }
 
                     AnimatedVisibility(visible = sortMode.isOn) {
-                        LazyRow(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
-                            items(categoryList) { expenseCategory ->
+                        LazyRow(
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                            state = categoryLazyRowState
+                        ) {
+                            itemsIndexed(categoryList) { index, expenseCategory ->
                                 Chip(
                                     value = expenseCategory,
                                     isSelected = expenseCategory == clickedCategory.expenseCategory,
                                     onChipClicked = { clickedCategory ->
                                         viewModel.onEvent(
                                             UiEvent.ExpenseCategorySelectionForSort(
-                                                clickedCategory
+                                                clickedCategory, index
                                             )
                                         )
                                     })
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
+                        }
+                        coroutineScope.launch {
+                            categoryLazyRowState.scrollToItem(clickedCategoryIndex)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }

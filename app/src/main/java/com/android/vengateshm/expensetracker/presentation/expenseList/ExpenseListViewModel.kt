@@ -40,6 +40,9 @@ class ExpenseListViewModel @Inject constructor(
     val clickedExpenseCategory: State<UiEvent.ExpenseCategorySelectionForSort> =
         _clickedExpenseCategory
 
+    private var _clickedExpenseCategoryIndex = mutableStateOf(0)
+    val clickedExpenseCategoryIndex: State<Int> = _clickedExpenseCategoryIndex
+
     var getExpensesJob: Job? = null
 
     init {
@@ -101,6 +104,7 @@ class ExpenseListViewModel @Inject constructor(
                 }
             }
             is UiEvent.ExpenseCategorySelectionForSort -> {
+                _clickedExpenseCategoryIndex.value = uiEvent.position
                 if (_clickedExpenseCategory.value.expenseCategory?.categoryId != uiEvent.expenseCategory?.categoryId) {
                     getExpensesJob?.cancel()
                     getExpenses(uiEvent.expenseCategory)
