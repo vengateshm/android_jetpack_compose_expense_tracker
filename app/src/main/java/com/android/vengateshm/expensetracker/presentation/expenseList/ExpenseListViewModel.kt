@@ -93,16 +93,21 @@ class ExpenseListViewModel @Inject constructor(
             is UiEvent.SortMode -> {
                 _sortMode.value = UiEvent.SortMode(isOn = uiEvent.isOn.not())
                 if (sortMode.value.isOn.not()) {
-                    getExpensesJob?.cancel()
-                    getExpenses()
+                    if (_clickedExpenseCategory.value.expenseCategory != null) {
+                        getExpensesJob?.cancel()
+                        getExpenses()
+                    }
+                    _clickedExpenseCategory.value = UiEvent.ExpenseCategorySelectionForSort(null)
                 }
             }
             is UiEvent.ExpenseCategorySelectionForSort -> {
+                if (_clickedExpenseCategory.value.expenseCategory?.categoryId != uiEvent.expenseCategory?.categoryId) {
+                    getExpensesJob?.cancel()
+                    getExpenses(uiEvent.expenseCategory)
+                }
                 _clickedExpenseCategory.value = UiEvent.ExpenseCategorySelectionForSort(
                     expenseCategory = uiEvent.expenseCategory
                 )
-                getExpensesJob?.cancel()
-                getExpenses(uiEvent.expenseCategory)
             }
         }
     }
