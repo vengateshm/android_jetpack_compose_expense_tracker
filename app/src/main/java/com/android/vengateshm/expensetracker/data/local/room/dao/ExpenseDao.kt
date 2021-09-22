@@ -17,7 +17,10 @@ interface ExpenseDao {
     suspend fun delete(expenseDto: ExpenseDto)
 
     @Query("SELECT * FROM expense e INNER JOIN expense_category ec ON e.expense_category_id = ec.category_id INNER JOIN payment_type pt ON e.expense_payment_type_id = pt.payment_type_id")
-    fun getAllExpensesWithCategoryRecord(): Flow<List<ExpenseWithCategoryDto>>
+    fun getAllExpenses(): Flow<List<ExpenseWithCategoryDto>>
+
+    @Query("SELECT * FROM expense e INNER JOIN expense_category ec ON e.expense_category_id = ec.category_id INNER JOIN payment_type pt ON e.expense_payment_type_id = pt.payment_type_id WHERE e.expense_category_id = :expenseCategoryId")
+    fun getExpensesByCategory(expenseCategoryId: Long): Flow<List<ExpenseWithCategoryDto>>
 
     @Query("SELECT * FROM expense e INNER JOIN expense_category ec ON e.expense_category_id = ec.category_id INNER JOIN payment_type pt ON e.expense_payment_type_id = pt.payment_type_id WHERE e.expense_id = :expenseId")
     suspend fun getExpenseById(expenseId: Long): ExpenseWithCategoryDto

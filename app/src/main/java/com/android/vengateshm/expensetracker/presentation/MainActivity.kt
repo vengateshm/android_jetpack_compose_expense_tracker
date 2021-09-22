@@ -1,8 +1,9 @@
-package com.android.vengateshm.expensetracker
+package com.android.vengateshm.expensetracker.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,13 +20,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import androidx.navigation.navDeepLink
 import com.android.vengateshm.expensetracker.common.*
-import com.android.vengateshm.expensetracker.presentation.Screen
 import com.android.vengateshm.expensetracker.presentation.expenseAdd.ExpenseAddScreen
 import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetailDialog
 import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetailScreen
 import com.android.vengateshm.expensetracker.presentation.expenseList.ExpenseListScreen
 import com.android.vengateshm.expensetracker.presentation.more.MoreScreen
-import com.android.vengateshm.expensetracker.presentation.toToolbarLabelResId
 import com.android.vengateshm.expensetracker.ui.theme.ExpenseTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -40,6 +39,7 @@ val bottomMenuList = listOf(
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalSerializationApi
 @Composable
 fun MainScreen(navController: NavHostController) {

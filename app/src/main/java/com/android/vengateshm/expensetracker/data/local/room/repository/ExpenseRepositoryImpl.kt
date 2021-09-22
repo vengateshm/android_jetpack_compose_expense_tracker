@@ -7,6 +7,7 @@ import com.android.vengateshm.expensetracker.data.local.room.dto.ExpenseCategory
 import com.android.vengateshm.expensetracker.data.local.room.dto.ExpenseDto
 import com.android.vengateshm.expensetracker.data.local.room.dto.ExpenseWithCategoryDto
 import com.android.vengateshm.expensetracker.data.local.room.dto.PaymentTypeDto
+import com.android.vengateshm.expensetracker.domain.model.ExpenseCategory
 import com.android.vengateshm.expensetracker.domain.repository.ExpenseRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -28,11 +29,19 @@ class ExpenseRepositoryImpl @Inject constructor(
     }
 
     override fun getAllExpenses(): Flow<List<ExpenseWithCategoryDto>> {
-        return expenseDao.getAllExpensesWithCategoryRecord()
+        return expenseDao.getAllExpenses()
+    }
+
+    override fun getExpensesByCategory(expenseCategory: ExpenseCategory): Flow<List<ExpenseWithCategoryDto>> {
+        return expenseDao.getExpensesByCategory(expenseCategoryId = expenseCategory.categoryId!!)
     }
 
     override suspend fun getAllCategories(): List<ExpenseCategoryDto> {
         return expenseCategoryDao.getAllCategories()
+    }
+
+    override fun consumeAllCategories(): Flow<List<ExpenseCategoryDto>> {
+        return expenseCategoryDao.consumeAllCategories()
     }
 
     override suspend fun getAllPaymentType(): List<PaymentTypeDto> {

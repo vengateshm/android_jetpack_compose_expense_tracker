@@ -1,8 +1,12 @@
 package com.android.vengateshm.expensetracker.presentation.expenseList
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -10,6 +14,7 @@ import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -21,11 +26,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.android.vengateshm.expensetracker.R
 import com.android.vengateshm.expensetracker.presentation.Screen
+import com.android.vengateshm.expensetracker.presentation.expenseList.components.Chip
 import com.android.vengateshm.expensetracker.presentation.expenseList.components.ExpenseListItem
+import com.android.vengateshm.expensetracker.ui.theme.Purple200
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+@ExperimentalAnimationApi
 @ExperimentalSerializationApi
 @Composable
 fun ExpenseListScreen(
@@ -33,6 +41,10 @@ fun ExpenseListScreen(
     viewModel: ExpenseListViewModel = hiltViewModel(),
 ) {
     val state = viewModel.expenseListState.value
+    val sortMode = viewModel.sortMode.value
+    val categoryList = viewModel.categoryList.value
+    val categoryFilterHorizontalScrollState = rememberScrollState()
+    val clickedCategory = viewModel.clickedExpenseCategory.value
 
     Box(modifier = Modifier.fillMaxSize()) {
         when {
@@ -65,26 +77,64 @@ fun ExpenseListScreen(
                                     )
                                 )
                             })
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(imageVector = Icons.Rounded.Sort, contentDescription = null)
+                        IconButton(onClick = {
+                            viewModel.onEvent(UiEvent.SortMode(sortMode.isOn))
+                        }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Sort,
+                                tint = if (sortMode.isOn) Purple200 else Color.Gray,
+                                contentDescription = null
+                            )
                         }
                     }
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        items(state.expenseList) { expenseListItem ->
-                            ExpenseListItem(expenseWithCategory = expenseListItem,
-                                onDeleteClicked = {
-                                    viewModel.deleteExpense(it)
-                                },
-                                onItemClicked = {
-                                    navController.navigate(
-                                        Screen.ExpenseDetailDialog.route + "/${
-                                            Json.encodeToString(
-                                                expenseListItem
+
+                    AnimatedVisibility(visible = sortMode.isOn) {
+                        LazyRow(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+                            items(categoryList) { expenseCategory ->
+                                Chip(
+                                    value = expenseCategory,
+                                    isSelected = expenseCategory == clickedCategory.expenseCategory,
+                                    onChipClicked = { clickedCategory ->
+                                        viewModel.onEvent(
+                                            UiEvent.ExpenseCategorySelectionForSort(
+                                                clickedCategory
                                             )
-                                        }"
-                                    )
-                                })
-                            Divider()
+                                        )
+                                    })
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+
+                    if (state.expenseList.isEmpty()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                text = "No Expenses found",
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            items(state.expenseList) { expenseListItem ->
+                                ExpenseListItem(expenseWithCategory = expenseListItem,
+                                    onDeleteClicked = {
+                                        viewModel.deleteExpense(it)
+                                    },
+                                    onItemClicked = {
+                                        navController.navigate(
+                                            Screen.ExpenseDetailDialog.route + "/${
+                                                Json.encodeToString(
+                                                    expenseListItem
+                                                )
+                                            }"
+                                        )
+                                    })
+                                Divider()
+                            }
                         }
                     }
                 }
