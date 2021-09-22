@@ -18,13 +18,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import androidx.navigation.navDeepLink
-import com.android.vengateshm.expensetracker.common.DEEPLINK_BASE_URI
-import com.android.vengateshm.expensetracker.common.DEEPLINK_SUFFIX_EXPENSE_ADD
+import com.android.vengateshm.expensetracker.common.*
 import com.android.vengateshm.expensetracker.common.DEEPLINK_SUFFIX_EXPENSE_LIST
-import com.android.vengateshm.expensetracker.common.DEEPLINK_SUFFIX_MORE
 import com.android.vengateshm.expensetracker.presentation.Screen
 import com.android.vengateshm.expensetracker.presentation.expenseAdd.ExpenseAddScreen
-import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetail
+import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetailDialog
+import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetailScreen
 import com.android.vengateshm.expensetracker.presentation.expenseList.ExpenseListScreen
 import com.android.vengateshm.expensetracker.presentation.more.MoreScreen
 import com.android.vengateshm.expensetracker.presentation.toToolbarLabelResId
@@ -122,25 +121,40 @@ fun MainScreen(navController: NavHostController) {
             startDestination = Screen.ExpenseList.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(route = Screen.ExpenseList.route,
+            // Expense List
+            composable(
+                route = Screen.ExpenseList.route,
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "$DEEPLINK_BASE_URI/$DEEPLINK_SUFFIX_EXPENSE_LIST"
                 })
             ) {
                 ExpenseListScreen(navController = navController)
             }
+
+            // Expense detail dialog
             dialog(
-                route = Screen.ExpenseDetail.route + "/{expenseWithCategory}",
+                route = Screen.ExpenseDetailDialog.route + "/{expenseWithCategory}",
             ) {
                 it.arguments?.getString("expenseWithCategory")
                     ?.also { jsonStr ->
-                        ExpenseDetail(
+                        ExpenseDetailDialog(
                             navController = navController,
                             expenseWithCategory = Json.decodeFromString(jsonStr)
                         )
                     }
             }
-            composable(route = Screen.ExpenseAdd.route,
+
+            // Expense detail
+            composable(
+                route = Screen.ExpenseDetail.route + "/{expenseId}",
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "$DEEPLINK_BASE_URI/$DEEPLINK_SUFFIX_EXPENSE_DETAIL/{expenseId}"
+                })
+            ) {
+                ExpenseDetailScreen()
+            }
+            composable(
+                route = Screen.ExpenseAdd.route,
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "$DEEPLINK_BASE_URI/$DEEPLINK_SUFFIX_EXPENSE_ADD"
                 })
@@ -155,7 +169,8 @@ fun MainScreen(navController: NavHostController) {
                         }
                     })
             }
-            composable(route = Screen.More.route,
+            composable(
+                route = Screen.More.route,
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "$DEEPLINK_BASE_URI/$DEEPLINK_SUFFIX_MORE"
                 })

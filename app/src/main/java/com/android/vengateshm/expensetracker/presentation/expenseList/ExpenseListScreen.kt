@@ -57,7 +57,7 @@ fun ExpenseListScreen(
                             },
                             onItemClicked = {
                                 navController.navigate(
-                                    Screen.ExpenseDetail.route + "/${
+                                    Screen.ExpenseDetailDialog.route + "/${
                                         Json.encodeToString(
                                             expenseListItem
                                         )

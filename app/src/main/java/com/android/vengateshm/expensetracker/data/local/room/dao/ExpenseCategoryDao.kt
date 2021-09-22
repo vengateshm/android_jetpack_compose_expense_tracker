@@ -11,7 +11,7 @@ interface ExpenseCategoryDao {
     fun insertAll(expenseCategoryDtoList: List<ExpenseCategoryDto>)
 
     @Query("SELECT * FROM expense_category")
-    fun getAllCategories(): List<ExpenseCategoryDto>
+    suspend fun getAllCategories(): List<ExpenseCategoryDto>
 
     @Insert
     fun addExpenseCategory(expenseCategoryDto: ExpenseCategoryDto)

@@ -13,4 +13,5 @@ interface ExpenseRepository {
     suspend fun getAllCategories(): List<ExpenseCategoryDto>
     suspend fun getAllPaymentType(): List<PaymentTypeDto>
     suspend fun addExpenseCategory(expenseCategoryDto: ExpenseCategoryDto)
+    suspend fun getExpenseById(expenseId: Long):ExpenseWithCategoryDto
 }

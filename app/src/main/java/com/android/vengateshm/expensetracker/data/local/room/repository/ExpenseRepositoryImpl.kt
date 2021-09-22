@@ -42,4 +42,8 @@ class ExpenseRepositoryImpl @Inject constructor(
     override suspend fun addExpenseCategory(expenseCategoryDto: ExpenseCategoryDto) {
         expenseCategoryDao.addExpenseCategory(expenseCategoryDto)
     }
+
+    override suspend fun getExpenseById(expenseId: Long): ExpenseWithCategoryDto {
+        return expenseDao.getExpenseById(expenseId)
+    }
 }

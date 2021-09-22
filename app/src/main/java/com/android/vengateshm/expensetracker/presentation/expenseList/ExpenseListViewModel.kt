@@ -19,6 +19,7 @@ import javax.inject.Inject
 class ExpenseListViewModel @Inject constructor(
     private val repository: ExpenseRepository,
 ) : ViewModel() {
+
     private var _expenseListState = mutableStateOf(ExpenseListState())
     val expenseListState: State<ExpenseListState> = _expenseListState
 
@@ -31,8 +32,10 @@ class ExpenseListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllExpenses()
                 .catch { throwable ->
-                    _expenseListState.value = ExpenseListState(error = throwable.message
-                        ?: "Error occurred while retrieving expenses")
+                    _expenseListState.value = ExpenseListState(
+                        error = throwable.message
+                            ?: "Error occurred while retrieving expenses"
+                    )
                 }
                 .collect { expenseWithCategoryDtoList ->
                     _expenseListState.value = ExpenseListState(
