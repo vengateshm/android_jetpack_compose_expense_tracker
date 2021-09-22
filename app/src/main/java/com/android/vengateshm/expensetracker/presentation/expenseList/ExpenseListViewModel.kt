@@ -101,6 +101,7 @@ class ExpenseListViewModel @Inject constructor(
                         getExpenses()
                     }
                     _clickedExpenseCategory.value = UiEvent.ExpenseCategorySelectionForSort(null)
+                    _clickedExpenseCategoryIndex.value = 0
                 }
             }
             is UiEvent.ExpenseCategorySelectionForSort -> {
