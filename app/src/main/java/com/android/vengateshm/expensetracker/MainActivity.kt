@@ -19,7 +19,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import androidx.navigation.navDeepLink
 import com.android.vengateshm.expensetracker.common.*
-import com.android.vengateshm.expensetracker.common.DEEPLINK_SUFFIX_EXPENSE_LIST
 import com.android.vengateshm.expensetracker.presentation.Screen
 import com.android.vengateshm.expensetracker.presentation.expenseAdd.ExpenseAddScreen
 import com.android.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetailDialog

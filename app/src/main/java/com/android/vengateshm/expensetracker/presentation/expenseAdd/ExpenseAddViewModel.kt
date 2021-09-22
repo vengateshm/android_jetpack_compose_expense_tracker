@@ -46,8 +46,10 @@ class ExpenseAddViewModel @Inject constructor(
                     ))
                 }
             } catch (e: Exception) {
-                ExpenseAddState(error = e.message
-                    ?: "Error retrieving expense category or payment type")
+                ExpenseAddState(
+                    error = e.message
+                        ?: "Error retrieving expense category or payment type"
+                )
             }
             withContext(Dispatchers.Main) {
                 _expenseAddState.value = expenseAddState
@@ -63,13 +65,15 @@ class ExpenseAddViewModel @Inject constructor(
         selectedExpenseDate: Calendar,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addExpense(ExpenseDto(
-                description = description,
-                amount = amount.toDouble(),
-                createdAt = selectedExpenseDate,
-                categoryId = selectedCategory.categoryId!!,
-                paymentTypeId = selectedPaymentType.paymentId!!
-            ))
+            repository.addExpense(
+                ExpenseDto(
+                    description = description,
+                    amount = amount.toDouble(),
+                    createdAt = selectedExpenseDate,
+                    categoryId = selectedCategory.categoryId!!,
+                    paymentTypeId = selectedPaymentType.paymentId!!
+                )
+            )
         }
     }
 

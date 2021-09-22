@@ -1,8 +1,6 @@
 package com.android.vengateshm.expensetracker.domain.model
 
 import com.android.vengateshm.expensetracker.data.local.room.dto.ExpenseDto
-import java.io.Serializable
-import java.util.*
 
 @kotlinx.serialization.Serializable
 data class ExpenseWithCategory(

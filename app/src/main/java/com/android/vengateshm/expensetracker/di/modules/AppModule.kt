@@ -22,7 +22,9 @@ object AppModule {
         expenseCategoryDao: ExpenseCategoryDao,
         paymentTypeDao: PaymentTypeDao,
     ): ExpenseRepository =
-        ExpenseRepositoryImpl(expenseDao,
+        ExpenseRepositoryImpl(
+            expenseDao,
             expenseCategoryDao,
-            paymentTypeDao)
+            paymentTypeDao
+        )
 }

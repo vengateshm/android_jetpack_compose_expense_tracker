@@ -6,11 +6,15 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "expense",
-    foreignKeys = [ForeignKey(entity = ExpenseCategoryDto::class,
+@Entity(
+    tableName = "expense",
+    foreignKeys = [ForeignKey(
+        entity = ExpenseCategoryDto::class,
         parentColumns = ["category_id"],
         childColumns = ["expense_category_id"],
-        onDelete = ForeignKey.CASCADE)])
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 data class ExpenseDto(
     @ColumnInfo(name = "expense_id")
     @PrimaryKey(autoGenerate = true)

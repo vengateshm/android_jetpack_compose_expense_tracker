@@ -38,13 +38,15 @@ fun ExpenseAdd(
     onSelectDateClicked: () -> Unit,
     onAddExpenseClicked: () -> Unit,
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         Box {
-            OutlinedTextField(modifier = Modifier
-                .fillMaxWidth(),
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 value = selectedExpenseCategoryName,
                 onValueChange = {
 
@@ -61,7 +63,8 @@ fun ExpenseAdd(
                             }),
                     )
                 },
-                readOnly = true)
+                readOnly = true
+            )
             DropdownMenu(modifier = Modifier
                 .fillMaxWidth(),
                 expanded = categoryListDropdownExpanded,
@@ -81,8 +84,9 @@ fun ExpenseAdd(
         Spacer(Modifier.height(8.dp))
 
         Box {
-            OutlinedTextField(modifier = Modifier
-                .fillMaxWidth(),
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 value = selectedPaymentTypeName,
                 onValueChange = {
 
@@ -99,7 +103,8 @@ fun ExpenseAdd(
                             }),
                     )
                 },
-                readOnly = true)
+                readOnly = true
+            )
             DropdownMenu(modifier = Modifier
                 .fillMaxWidth(),
                 expanded = paymentTypeListDropdownExpanded,
@@ -144,8 +149,9 @@ fun ExpenseAdd(
 
         Spacer(Modifier.height(8.dp))
 
-        OutlinedTextField(modifier = Modifier
-            .fillMaxWidth(),
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
             value = selectedDate,
             onValueChange = {
 
@@ -161,7 +167,8 @@ fun ExpenseAdd(
                         }),
                 )
             },
-            readOnly = true)
+            readOnly = true
+        )
 
         Spacer(Modifier.height(32.dp))
 

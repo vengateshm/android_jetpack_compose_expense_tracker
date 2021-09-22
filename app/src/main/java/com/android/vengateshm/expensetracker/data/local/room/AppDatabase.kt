@@ -18,9 +18,11 @@ import com.android.vengateshm.expensetracker.data.local.room.prepopulateData.def
 import com.android.vengateshm.expensetracker.data.local.room.prepopulateData.defaultPaymentDtoTypeList
 import com.android.vengateshm.expensetracker.data.local.room.typeConverters.Converters
 
-@Database(entities = [ExpenseCategoryDto::class, ExpenseDto::class, PaymentTypeDto::class],
+@Database(
+    entities = [ExpenseCategoryDto::class, ExpenseDto::class, PaymentTypeDto::class],
     version = 1,
-    exportSchema = true)
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao
@@ -41,9 +43,11 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun createDatabase(context: Context): AppDatabase {
-            return Room.databaseBuilder(context.applicationContext,
+            return Room.databaseBuilder(
+                context.applicationContext,
                 AppDatabase::class.java,
-                DB_NAME)
+                DB_NAME
+            )
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
