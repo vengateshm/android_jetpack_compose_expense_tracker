@@ -11,6 +11,7 @@ data class ExpenseWithCategory(
     val categoryName: String,
     val paymentTypeId: Long? = null,
     val paymentTypeName: String,
+    val createdAt: Long? = null
 )
 
 fun ExpenseWithCategory.toExpenseDto() = ExpenseDto(

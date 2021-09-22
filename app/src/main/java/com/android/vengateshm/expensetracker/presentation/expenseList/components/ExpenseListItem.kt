@@ -18,6 +18,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.android.vengateshm.expensetracker.common.EXPENSE_DATE_FORMAT
+import com.android.vengateshm.expensetracker.common.exts.toFormattedDate
 import com.android.vengateshm.expensetracker.domain.model.ExpenseWithCategory
 
 @Composable
@@ -45,6 +47,13 @@ fun ExpenseListItem(
                     text = expenseWithCategory.categoryName,
                     color = Color.Red,
                     textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body2
+                )
+            }
+            expenseWithCategory.createdAt?.let { timeInMillis ->
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = timeInMillis.toFormattedDate(EXPENSE_DATE_FORMAT),
                     style = MaterialTheme.typography.body2
                 )
             }

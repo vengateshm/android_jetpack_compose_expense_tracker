@@ -30,5 +30,6 @@ fun ExpenseWithCategoryDto.toExpenseWithCategory() = ExpenseWithCategory(
     categoryId = this.categoryId,
     categoryName = this.categoryName,
     paymentTypeId = this.paymentTypeId,
-    paymentTypeName = this.paymentTypeName
+    paymentTypeName = this.paymentTypeName,
+    createdAt = this.createdAt?.timeInMillis
 )

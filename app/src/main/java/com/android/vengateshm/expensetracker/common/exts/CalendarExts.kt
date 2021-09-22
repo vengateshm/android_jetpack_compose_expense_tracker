@@ -10,3 +10,13 @@ fun Calendar.toFormattedDate(pattern: String): String {
         "NA"
     }
 }
+
+fun Long.toFormattedDate(pattern: String): String {
+    return try {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = this
+        SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.time)
+    } catch (e: Exception) {
+        "NA"
+    }
+}
