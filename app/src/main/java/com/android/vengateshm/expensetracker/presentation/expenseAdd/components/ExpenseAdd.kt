@@ -6,8 +6,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,27 +42,11 @@ fun ExpenseAdd(
             .padding(16.dp)
     ) {
         Box {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = selectedExpenseCategoryName,
-                onValueChange = {
-
-                },
-                enabled = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = if (categoryListDropdownExpanded) Icons.Rounded.KeyboardArrowUp else
-                            Icons.Rounded.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.clickable(
-                            onClick = {
-                                onExpenseCategoryDropDownButtonClicked(categoryListDropdownExpanded.not())
-                            }),
-                    )
-                },
-                readOnly = true
-            )
+            OutlinedDropDownContainer(labelName = selectedExpenseCategoryName,
+                isExpanded = categoryListDropdownExpanded,
+                onDropDownClicked = {
+                    onExpenseCategoryDropDownButtonClicked(it)
+                })
             DropdownMenu(modifier = Modifier
                 .fillMaxWidth(),
                 expanded = categoryListDropdownExpanded,
@@ -84,27 +66,11 @@ fun ExpenseAdd(
         Spacer(Modifier.height(8.dp))
 
         Box {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = selectedPaymentTypeName,
-                onValueChange = {
-
-                },
-                enabled = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = if (paymentTypeListDropdownExpanded) Icons.Rounded.KeyboardArrowUp else
-                            Icons.Rounded.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.clickable(
-                            onClick = {
-                                onPaymentTypeDropDownButtonClicked(paymentTypeListDropdownExpanded.not())
-                            }),
-                    )
-                },
-                readOnly = true
-            )
+            OutlinedDropDownContainer(labelName = selectedPaymentTypeName,
+                isExpanded = paymentTypeListDropdownExpanded,
+                onDropDownClicked = {
+                    onPaymentTypeDropDownButtonClicked(it)
+                })
             DropdownMenu(modifier = Modifier
                 .fillMaxWidth(),
                 expanded = paymentTypeListDropdownExpanded,
