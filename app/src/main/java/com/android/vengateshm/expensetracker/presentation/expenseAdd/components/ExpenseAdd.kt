@@ -1,6 +1,5 @@
 package com.android.vengateshm.expensetracker.presentation.expenseAdd.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -115,25 +114,11 @@ fun ExpenseAdd(
 
         Spacer(Modifier.height(8.dp))
 
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = selectedDate,
-            onValueChange = {
-
-            },
-            enabled = true,
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.CalendarToday,
-                    contentDescription = null,
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            onSelectDateClicked()
-                        }),
-                )
-            },
-            readOnly = true
+        OutlinedContainerWithTrailingIcon(labelName = selectedDate,
+            trailingIcon = Icons.Rounded.CalendarToday,
+            onClicked = {
+                onSelectDateClicked()
+            }
         )
 
         Spacer(Modifier.height(32.dp))
