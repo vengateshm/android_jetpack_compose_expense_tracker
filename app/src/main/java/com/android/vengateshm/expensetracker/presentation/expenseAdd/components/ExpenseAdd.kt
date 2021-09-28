@@ -1,6 +1,7 @@
 package com.android.vengateshm.expensetracker.presentation.expenseAdd.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.android.vengateshm.expensetracker.R
@@ -28,12 +30,15 @@ fun ExpenseAdd(
     onPaymentTypeSelected: (PaymentType, Int) -> Unit,
     onPaymentTypeListDropDownDisMissRequest: (Boolean) -> Unit,
     selectedPaymentTypeName: String,
-    description: String, amount: String,
+    description: String,
     onDescriptionChanged: (String) -> Unit,
+    onDescriptionKeyboardNextAction: () -> Unit,
+    amount: String,
     onAmountChanged: (String) -> Unit,
+    onAmountKeyboardDoneAction: () -> Unit,
     selectedDate: String,
     onSelectDateClicked: () -> Unit,
-    onAddExpenseClicked: () -> Unit,
+    onAddExpenseClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -94,23 +99,36 @@ fun ExpenseAdd(
             label = { Text(text = stringResource(id = R.string.description_label)) },
             value = description,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
             onValueChange = {
                 onDescriptionChanged(it)
             },
+            keyboardActions = KeyboardActions(onDone = {
+                onDescriptionKeyboardNextAction()
+            })
         )
 
         Spacer(Modifier.height(8.dp))
 
-        OutlinedTextField(modifier = Modifier
-            .fillMaxWidth(),
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
             label = { Text(text = stringResource(id = R.string.amount_label)) },
             value = amount,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done),
             onValueChange = {
                 onAmountChanged(it)
+            },
+            keyboardActions = KeyboardActions(onDone = {
+                onAmountKeyboardDoneAction()
             })
+        )
 
         Spacer(Modifier.height(8.dp))
 
