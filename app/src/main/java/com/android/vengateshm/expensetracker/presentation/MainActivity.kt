@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -37,9 +38,10 @@ val bottomMenuList = listOf(
     Screen.More
 )
 
+@ExperimentalComposeUiApi
+@ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,6 +56,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalSerializationApi
 @Composable
