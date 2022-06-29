@@ -1,16 +1,15 @@
 package com.android.vengateshm.expensetracker.presentation.expenseAdd.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.android.vengateshm.expensetracker.R
@@ -31,12 +30,15 @@ fun ExpenseAdd(
     onPaymentTypeSelected: (PaymentType, Int) -> Unit,
     onPaymentTypeListDropDownDisMissRequest: (Boolean) -> Unit,
     selectedPaymentTypeName: String,
-    description: String, amount: String,
+    description: String,
     onDescriptionChanged: (String) -> Unit,
+    onDescriptionKeyboardNextAction: () -> Unit,
+    amount: String,
     onAmountChanged: (String) -> Unit,
+    onAmountKeyboardDoneAction: () -> Unit,
     selectedDate: String,
     onSelectDateClicked: () -> Unit,
-    onAddExpenseClicked: () -> Unit,
+    onAddExpenseClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -44,27 +46,11 @@ fun ExpenseAdd(
             .padding(16.dp)
     ) {
         Box {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = selectedExpenseCategoryName,
-                onValueChange = {
-
-                },
-                enabled = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = if (categoryListDropdownExpanded) Icons.Rounded.KeyboardArrowUp else
-                            Icons.Rounded.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.clickable(
-                            onClick = {
-                                onExpenseCategoryDropDownButtonClicked(categoryListDropdownExpanded.not())
-                            }),
-                    )
-                },
-                readOnly = true
-            )
+            OutlinedDropDownContainer(labelName = selectedExpenseCategoryName,
+                isExpanded = categoryListDropdownExpanded,
+                onDropDownClicked = {
+                    onExpenseCategoryDropDownButtonClicked(it)
+                })
             DropdownMenu(modifier = Modifier
                 .fillMaxWidth(),
                 expanded = categoryListDropdownExpanded,
@@ -84,27 +70,11 @@ fun ExpenseAdd(
         Spacer(Modifier.height(8.dp))
 
         Box {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = selectedPaymentTypeName,
-                onValueChange = {
-
-                },
-                enabled = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = if (paymentTypeListDropdownExpanded) Icons.Rounded.KeyboardArrowUp else
-                            Icons.Rounded.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.clickable(
-                            onClick = {
-                                onPaymentTypeDropDownButtonClicked(paymentTypeListDropdownExpanded.not())
-                            }),
-                    )
-                },
-                readOnly = true
-            )
+            OutlinedDropDownContainer(labelName = selectedPaymentTypeName,
+                isExpanded = paymentTypeListDropdownExpanded,
+                onDropDownClicked = {
+                    onPaymentTypeDropDownButtonClicked(it)
+                })
             DropdownMenu(modifier = Modifier
                 .fillMaxWidth(),
                 expanded = paymentTypeListDropdownExpanded,
@@ -129,45 +99,44 @@ fun ExpenseAdd(
             label = { Text(text = stringResource(id = R.string.description_label)) },
             value = description,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
             onValueChange = {
                 onDescriptionChanged(it)
             },
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        OutlinedTextField(modifier = Modifier
-            .fillMaxWidth(),
-            label = { Text(text = stringResource(id = R.string.amount_label)) },
-            value = amount,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                onAmountChanged(it)
+            keyboardActions = KeyboardActions(onDone = {
+                onDescriptionKeyboardNextAction()
             })
+        )
 
         Spacer(Modifier.height(8.dp))
 
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value = selectedDate,
+            label = { Text(text = stringResource(id = R.string.amount_label)) },
+            value = amount,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done),
             onValueChange = {
+                onAmountChanged(it)
+            },
+            keyboardActions = KeyboardActions(onDone = {
+                onAmountKeyboardDoneAction()
+            })
+        )
 
-            },
-            enabled = true,
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.CalendarToday,
-                    contentDescription = null,
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            onSelectDateClicked()
-                        }),
-                )
-            },
-            readOnly = true
+        Spacer(Modifier.height(8.dp))
+
+        OutlinedContainerWithTrailingIcon(labelName = selectedDate,
+            trailingIcon = Icons.Rounded.CalendarToday,
+            onClicked = {
+                onSelectDateClicked()
+            }
         )
 
         Spacer(Modifier.height(32.dp))

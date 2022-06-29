@@ -2,7 +2,10 @@ package com.android.vengateshm.expensetracker.presentation.expenseAdd
 
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.android.vengateshm.expensetracker.common.EXPENSE_DATE_FORMAT
@@ -13,6 +16,7 @@ import com.android.vengateshm.expensetracker.presentation.components.DateChooser
 import com.android.vengateshm.expensetracker.presentation.expenseAdd.components.ExpenseAdd
 import java.util.*
 
+@ExperimentalComposeUiApi
 @Composable
 fun ExpenseAddScreen(
     navController: NavController,
@@ -33,6 +37,8 @@ fun ExpenseAddScreen(
     var selectedCategory by remember { mutableStateOf<ExpenseCategory?>(null) }
     var selectedPaymentType by remember { mutableStateOf<PaymentType?>(null) }
     var selectedExpenseDate by remember { mutableStateOf<Calendar?>(null) }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     ExpenseAdd(
         categoryList = state.expenseAddData.categoryList,
@@ -68,8 +74,14 @@ fun ExpenseAddScreen(
         onDescriptionChanged = {
             description = it
         },
+        onDescriptionKeyboardNextAction = {
+            keyboardController?.hide()
+        },
         onAmountChanged = {
             amount = it
+        },
+        onAmountKeyboardDoneAction = {
+            keyboardController?.hide()
         },
         selectedDate = selectedDate,
         onSelectDateClicked = {
@@ -96,5 +108,6 @@ fun ExpenseAddScreen(
             } else {
                 onShowSnackBar(result.errStringRes!!)
             }
-        })
+        }
+    )
 }
