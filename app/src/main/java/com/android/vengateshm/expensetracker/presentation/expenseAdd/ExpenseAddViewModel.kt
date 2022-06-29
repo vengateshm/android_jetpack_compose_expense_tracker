@@ -94,7 +94,7 @@ class ExpenseAddViewModel @Inject constructor(
             description.isEmpty() -> {
                 ValidExpenseResult(false, R.string.err_please_enter_description)
             }
-            amount.isEmpty() -> {
+            amount.isEmpty() || amount.toDoubleOrNull() == null -> {
                 ValidExpenseResult(false, R.string.err_please_enter_amount)
             }
             amount.toDouble() <= 0 -> {

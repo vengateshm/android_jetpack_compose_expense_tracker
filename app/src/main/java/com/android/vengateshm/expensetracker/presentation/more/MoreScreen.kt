@@ -101,7 +101,8 @@ fun AddCategoryAlert(
         },
         confirmButton = {
             Button(onClick = {
-                if (categoryName.isEmpty()) {
+                val regexPattern = """^[a-zA-Z]*${'$'}""".toRegex()
+                if (categoryName.isEmpty() || categoryName.matches(regex = regexPattern).not()) {
                     onCategoryErrorFieldError(true)
                 } else {
                     onValidationSuccess()
