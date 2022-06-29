@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -89,6 +90,10 @@ fun ExpenseListScreen(
                         }
                     }
 
+                    LaunchedEffect(key1 = clickedCategoryIndex, block = {
+                        categoryLazyRowState.scrollToItem(clickedCategoryIndex)
+                    })
+
                     AnimatedVisibility(visible = sortMode.isOn) {
                         LazyRow(
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp),
@@ -107,9 +112,6 @@ fun ExpenseListScreen(
                                     })
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
-                        }
-                        coroutineScope.launch {
-                            categoryLazyRowState.scrollToItem(clickedCategoryIndex)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
