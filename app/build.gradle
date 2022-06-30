@@ -10,7 +10,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.android.vengateshm.expensetracker"
+        applicationId "com.mc.vengateshm.expensetracker"
         minSdk 21
         targetSdk 31
         versionCode 1
