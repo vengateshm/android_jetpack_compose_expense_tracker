@@ -37,12 +37,21 @@ jobs:
       uses: r0adkll/sign-android-release@v1
       with:
         releaseDirectory: app/build/outputs/bundle/release
-        signingKeyBase64: ${{ secrets.SIGN_KEY }}
+        signingKeyBase64: ${{secrets.SIGN_KEY}}
         alias: ${{ secrets.ALIAS }}
-        keyStorePassword: ${{ secrets.STORE_KEY_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
+        keyStorePassword: ${{secrets.STORE_KEY_PASSWORD}}
+        keyPassword: ${{secrets.KEY_PASSWORD}}
+    
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with: 
-        name: release bundle
+        name: Release app bundle
         path: app/build/outputs/bundle/release/app-release.aab
+    
+    - name: Deploy to Play Store
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{secrets.SERVICE_ACCOUNT}}
+        packageName: com.mc.vengateshm.expensetracker
+        releaseFiles: app/build/outputs/bundle/release/app-release.aab
+        track: production
