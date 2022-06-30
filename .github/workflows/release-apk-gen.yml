@@ -35,6 +35,8 @@ jobs:
       
     - name: Sign apk
       uses: r0adkll/sign-android-release@v1
+      # ID used to access action output
+      id: sign_app
       with:
         releaseDirectory: app/build/outputs/apk/release
         signingKeyBase64: ${{ secrets.SIGN_KEY }}
@@ -45,4 +47,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: release bundle
-        path: app/build/outputs/apk/release/app-release.apk
+        path: ${{steps.sign_app.outputs.signedReleaseFile}}
