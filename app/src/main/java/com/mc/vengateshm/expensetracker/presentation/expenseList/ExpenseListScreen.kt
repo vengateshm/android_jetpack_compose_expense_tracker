@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.PieChart
 import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,7 +29,6 @@ import com.mc.vengateshm.expensetracker.presentation.Screen
 import com.mc.vengateshm.expensetracker.presentation.expenseList.components.Chip
 import com.mc.vengateshm.expensetracker.presentation.expenseList.components.ExpenseListItem
 import com.mc.vengateshm.expensetracker.ui.theme.Purple200
-import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -46,120 +46,132 @@ fun ExpenseListScreen(
     val categoryLazyRowState = rememberLazyListState()
     val clickedCategory = viewModel.clickedExpenseCategory.value
     val clickedCategoryIndex = viewModel.clickedExpenseCategoryIndex.value
-    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = Unit) {
+        with(viewModel) {
+            getAllExpenseCategories()
+            getExpenses()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        when {
-            state.isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            state.error.isNotBlank() -> {
-                Text(
-                    text = state.error,
-                    color = MaterialTheme.colors.error,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
-                        .align(Alignment.Center)
-                )
-            }
-            else -> {
-                Column {
-                    Row(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = buildAnnotatedString {
-                                append("Total Expense")
-                                append("\n")
-                                append(
-                                    AnnotatedString(
-                                        text = "\u20B9${state.expenseList.sumOf { it.amount }}",
-                                        spanStyle = SpanStyle(fontWeight = FontWeight.Bold)
-                                    )
+        if (state.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
+        if (state.error.isNotBlank()) {
+            Text(
+                text = state.error,
+                color = MaterialTheme.colors.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .align(Alignment.Center)
+            )
+        } else {
+            Column {
+                Row(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = buildAnnotatedString {
+                            append("Total Expense")
+                            append("\n")
+                            append(
+                                AnnotatedString(
+                                    text = "\u20B9${state.expenseList.sumOf { it.amount }}",
+                                    spanStyle = SpanStyle(fontWeight = FontWeight.Bold)
                                 )
-                            })
-                        IconButton(onClick = {
-                            viewModel.onEvent(UiEvent.SortMode(sortMode.isOn))
-                        }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Sort,
-                                tint = if (sortMode.isOn) Purple200 else Color.Gray,
-                                contentDescription = null
                             )
+                        })
+                    IconButton(onClick = {
+                        viewModel.onEvent(UiEvent.SortMode(sortMode.isOn))
+                    }) {
+                        Icon(
+                            imageVector = Icons.Rounded.Sort,
+                            tint = if (sortMode.isOn) Purple200 else Color.Gray,
+                            contentDescription = null
+                        )
+                    }
+                    IconButton(onClick = {
+                        navController.navigate(Screen.Chart.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Rounded.PieChart,
+                            tint = Color.Gray,
+                            contentDescription = null
+                        )
+                    }
+                }
+
+                LaunchedEffect(key1 = clickedCategoryIndex, block = {
+                    categoryLazyRowState.scrollToItem(clickedCategoryIndex)
+                })
+
+                AnimatedVisibility(visible = sortMode.isOn) {
+                    LazyRow(
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                        state = categoryLazyRowState
+                    ) {
+                        itemsIndexed(categoryList) { index, expenseCategory ->
+                            Chip(
+                                value = expenseCategory,
+                                isSelected = expenseCategory == clickedCategory.expenseCategory,
+                                onChipClicked = { clickedCategory ->
+                                    viewModel.onEvent(
+                                        UiEvent.ExpenseCategorySelectionForSort(
+                                            clickedCategory, index
+                                        )
+                                    )
+                                })
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
                     }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
-                    LaunchedEffect(key1 = clickedCategoryIndex, block = {
-                        categoryLazyRowState.scrollToItem(clickedCategoryIndex)
-                    })
-
-                    AnimatedVisibility(visible = sortMode.isOn) {
-                        LazyRow(
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                            state = categoryLazyRowState
-                        ) {
-                            itemsIndexed(categoryList) { index, expenseCategory ->
-                                Chip(
-                                    value = expenseCategory,
-                                    isSelected = expenseCategory == clickedCategory.expenseCategory,
-                                    onChipClicked = { clickedCategory ->
-                                        viewModel.onEvent(
-                                            UiEvent.ExpenseCategorySelectionForSort(
-                                                clickedCategory, index
+                if (state.expenseList.isEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Text(
+                            text = "No Expenses found",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(state.expenseList) { expenseListItem ->
+                            ExpenseListItem(expenseWithCategory = expenseListItem,
+                                onDeleteClicked = {
+                                    viewModel.deleteExpense(it)
+                                },
+                                onItemClicked = {
+                                    navController.navigate(
+                                        Screen.ExpenseDetailDialog.route + "/${
+                                            Json.encodeToString(
+                                                expenseListItem
                                             )
-                                        )
-                                    })
-                                Spacer(modifier = Modifier.width(4.dp))
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-
-                    if (state.expenseList.isEmpty()) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            Text(
-                                text = "No Expenses found",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
-                            items(state.expenseList) { expenseListItem ->
-                                ExpenseListItem(expenseWithCategory = expenseListItem,
-                                    onDeleteClicked = {
-                                        viewModel.deleteExpense(it)
-                                    },
-                                    onItemClicked = {
-                                        navController.navigate(
-                                            Screen.ExpenseDetailDialog.route + "/${
-                                                Json.encodeToString(
-                                                    expenseListItem
-                                                )
-                                            }"
-                                        )
-                                    })
-                                Divider()
-                            }
+                                        }"
+                                    )
+                                })
+                            Divider()
                         }
                     }
                 }
-                ExtendedFloatingActionButton(modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(8.dp),
-                    icon = {
-                        Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
-                    },
-                    text = {
-                        Text(text = stringResource(id = R.string.add_expense))
-                    },
-                    onClick = {
-                        navController.navigate(Screen.ExpenseAdd.route)
-                    })
             }
+            ExtendedFloatingActionButton(modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(8.dp),
+                icon = {
+                    Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
+                },
+                text = {
+                    Text(text = stringResource(id = R.string.add_expense))
+                },
+                onClick = {
+                    navController.navigate(Screen.ExpenseAdd.route)
+                })
         }
     }
 }

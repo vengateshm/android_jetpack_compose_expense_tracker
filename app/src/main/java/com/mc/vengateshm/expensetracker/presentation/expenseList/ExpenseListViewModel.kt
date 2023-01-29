@@ -15,7 +15,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -45,12 +44,7 @@ class ExpenseListViewModel @Inject constructor(
 
     var getExpensesJob: Job? = null
 
-    init {
-        getAllExpenseCategories()
-        getExpenses()
-    }
-
-    private fun getAllExpenseCategories() {
+    fun getAllExpenseCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.consumeAllCategories()
                 .collect { categoryListDto ->
@@ -61,7 +55,7 @@ class ExpenseListViewModel @Inject constructor(
         }
     }
 
-    private fun getExpenses(expenseCategory: ExpenseCategory? = null) {
+    fun getExpenses(expenseCategory: ExpenseCategory? = null) {
         _expenseListState.value = ExpenseListState(isLoading = true)
         getExpensesJob = viewModelScope.launch(Dispatchers.IO) {
             val expensesFlow = expenseCategory?.let {

@@ -1,9 +1,16 @@
 package com.mc.vengateshm.expensetracker.presentation.more
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mc.vengateshm.expensetracker.R
@@ -80,15 +87,24 @@ fun AddCategoryAlert(
     onShowDialogStateChanged: (Boolean) -> Unit,
     onValidationSuccess: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = {
-            onShowDialogStateChanged(false)
-        },
-        title = {
-            Text(text = title)
-        },
-        text = {
+    Dialog(
+        onDismissRequest = { onShowDialogStateChanged(false) },
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(
+                    color = Color.White
+                )
+                .padding(8.dp)
+        ) {
             OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = categoryName,
                 onValueChange = {
                     onCategoryValueChange(it)
@@ -98,26 +114,37 @@ fun AddCategoryAlert(
                 },
                 isError = isCategoryTextFieldError
             )
-        },
-        confirmButton = {
-            Button(onClick = {
-                val regexPattern = """^[a-zA-Z]*${'$'}""".toRegex()
-                if (categoryName.isEmpty() || categoryName.matches(regex = regexPattern).not()) {
-                    onCategoryErrorFieldError(true)
-                } else {
-                    onValidationSuccess()
+            Text(
+                text = if (isCategoryTextFieldError) "Category name should contain alphabets only" else "",
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier/*.padding(start = 16.dp*/
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                OutlinedButton(onClick = {
                     onShowDialogStateChanged(false)
+                }) {
+                    Text(text = stringResource(id = R.string.cancel))
                 }
-            }) {
-                Text(text = stringResource(id = R.string.add))
-            }
-        },
-        dismissButton = {
-            Button(onClick = {
-                onShowDialogStateChanged(false)
-            }) {
-                Text(text = stringResource(id = R.string.close))
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = {
+                    val regexPattern = """^[a-z A-Z]*${'$'}""".toRegex()
+                    if (categoryName.isEmpty() || categoryName.matches(regex = regexPattern)
+                            .not()
+                    ) {
+                        onCategoryErrorFieldError(true)
+                    } else {
+                        onValidationSuccess()
+                        onShowDialogStateChanged(false)
+                    }
+                }) {
+                    Text(text = stringResource(id = R.string.add))
+                }
             }
         }
-    )
+    }
 }

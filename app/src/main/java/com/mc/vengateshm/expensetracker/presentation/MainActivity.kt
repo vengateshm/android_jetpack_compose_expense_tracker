@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import androidx.navigation.navDeepLink
 import com.mc.vengateshm.expensetracker.common.*
+import com.mc.vengateshm.expensetracker.presentation.chart.ChartScreen
 import com.mc.vengateshm.expensetracker.presentation.expenseAdd.ExpenseAddScreen
 import com.mc.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetailDialog
 import com.mc.vengateshm.expensetracker.presentation.expenseDetail.ExpenseDetailScreen
@@ -172,6 +173,11 @@ fun MainScreen(navController: NavHostController) {
                             )
                         }
                     })
+            }
+            composable(
+                route = Screen.Chart.route,
+            ) {
+                ChartScreen()
             }
             composable(
                 route = Screen.More.route,
