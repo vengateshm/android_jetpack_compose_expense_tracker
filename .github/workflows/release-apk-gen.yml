@@ -46,5 +46,5 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with: 
-        name: release bundle
+        name: release-apk
         path: ${{steps.sign_app.outputs.signedReleaseFile}}
